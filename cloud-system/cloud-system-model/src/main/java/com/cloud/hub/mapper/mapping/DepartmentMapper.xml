@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud.hub.mapper.DepartmentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cloud.hub.entity.Department">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="parent_id" property="parentId" />
+        <result column="full_name" property="fullName" />
+        <result column="level_code" property="levelCode" />
+        <result column="main_charge_user_id" property="mainChargeUserId" />
+        <result column="assistant_charge_user_id" property="assistantChargeUserId" />
+        <result column="sort" property="sort" />
+        <result column="deleted" property="deleted" />
+        <result column="version" property="version" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="update_user_id" property="updateUserId" />
+    </resultMap>
+
+    <select id="getMaxLevelCode" resultType="java.lang.String">
+        select max(level_code) level_code from sys_department where LENGTH(level_code)=#{length} and deleted = 0
+        <choose>
+            <when test="parentId!=null">
+                and parent_id= #{parentId}
+            </when>
+            <otherwise>
+                and parent_id is null
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

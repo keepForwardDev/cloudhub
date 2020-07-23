@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    url: jdbc:log4jdbc:mysql://localhost:3306/cloudhub?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: net.sf.log4jdbc.DriverSpy #com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-test-query: select 1=1
+      pool-name: mypool
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  freemarker:
+    suffix: .html
+    charset: utf-8
+  jackson:
+    date-format: yyy-MM-dd
+mybatis-plus:
+  mapper-locations: classpath*:com/cloud/hub/mapper/**/*.xml
+  configuration:
+    call-setters-on-nulls: true # 对map解析时，当数据为空时，不忽略该Key
+    cache-enabled: true         # 使用二级缓存
+security:
+  oauth2:
+    client:
+      clientId: app
+      clientSecret: 111111
+      access-token-uri: http://${system.auth-server}/auth/oauth/token
+      user-authorization-uri: http://${system.auth-server}/auth/oauth/authorize
+    resource:
+      userInfoUri: http://${system.auth-server}/auth/oauth/currentUserInfo
+      enableSessionRepository: false # 是否开启session保存
+log:
+  path: app-log
+
+system:
+  default-password: 111111
+  upload-path: /upload
+  auth-server: localhost:8081

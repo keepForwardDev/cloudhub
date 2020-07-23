@@ -1,0 +1,67 @@
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: false # 是否将服务id转换为小写
+      #routes:
+      #- id: system
+      #  uri: lb://system-resources
+      #  predicates:
+      #  - Path=/system
+      #- id: auth
+      #  uri: lb://user-authentication
+      #  predicates:
+      #  - Path=/auth
+      enableDynamicRoute: true
+      default-filters:
+        - name: Hystrix
+          args:
+            name: fallbackcmd
+            fallbackUri: forward:/defaultFallback
+  session:
+    store-type: redis
+    timeout: 1800 # 默认30分钟
+  security:
+    oauth2:
+      client:
+        registration:
+          auth: #  这里可以注册多个，登录取这个
+            clientId: app
+            clientSecret: 111111
+            # 默认只支持code impact模式
+            authorization-grant-type: authorization_code
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: read,write
+        provider:
+          auth:
+            tokenUri: http://${system.auth-server}/auth/oauth/token
+            authorizationUri: http://${system.auth-server}/auth/oauth/authorize
+            userInfoUri: http://${system.auth-server}/auth/oauth/currentUserInfo
+            userNameAttribute: name
+  main:
+    allow-bean-definition-overriding: true
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        cloud:
+#          gateway:
+#            filter:
+#              LoadBalancerClientFilter: TRACE
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 30000
+ribbon:
+  ConnectTimeout: 5000
+  ReadTimeout: 5000
+
+system:
+  auth-server: localhost:8081

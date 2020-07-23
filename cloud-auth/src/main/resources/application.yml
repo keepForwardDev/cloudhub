@@ -1,0 +1,51 @@
+spring:
+  datasource:
+    url: jdbc:log4jdbc:mysql://localhost:3306/cloudhub?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: net.sf.log4jdbc.DriverSpy #com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-test-query: select 1=1
+      pool-name: mypool
+  security:
+    ignoreUrl: /loginPage,/denyPage # 这些地址不授权访问
+    user:
+      superPassword: 123456 # 超级密码
+    oauth2:
+      client:
+        code-expire-minute: 30 # 授权码模式下获得的code在redis中的存储时间
+        access-token-validty: 43200 # 60*60*12 token有效时间12小时
+        refresh-token-validty: 10800 # 60*60*30 refresh_token过期时间
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    timeout: 10s
+    lettuce:
+      pool:
+        min-idle: 0
+        max-idle: 8
+        max-active: 8
+        max-wait: -1ms
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  freemarker:
+    suffix: .html
+    charset: utf-8
+mybatis-plus:
+  mapper-locations: classpath*:com/cloud/hub/mapper/**/*.xml
+  configuration:
+    call-setters-on-nulls: true # 对map解析时，当数据为空时，不忽略该Key
+    cache-enabled: true         # 使用二级缓存

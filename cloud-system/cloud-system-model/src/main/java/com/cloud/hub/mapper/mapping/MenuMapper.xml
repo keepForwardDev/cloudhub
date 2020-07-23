@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cloud.hub.mapper.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cloud.hub.entity.Menu">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="title" property="title" />
+        <result column="hidden" property="hidden" />
+        <result column="always_show" property="alwaysShow" />
+        <result column="redirect" property="redirect" />
+        <result column="parent_id" property="parentId" />
+        <result column="meta" property="meta" />
+        <result column="component" property="component" />
+        <result column="has_children" property="hasChildren" />
+        <result column="path" property="path" />
+        <result column="sort" property="sort" />
+        <result column="icon" property="icon" />
+        <result column="deleted" property="deleted" />
+        <result column="version" property="version" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="update_user_id" property="updateUserId" />
+    </resultMap>
+
+    <select id="selectUserMenus" resultType="com.cloud.hub.entity.Menu">
+        select
+        *
+        from sys_menu
+        where deleted=0
+        and id in (select menu_id from sys_role_resource where menu_flag=1 and role_id in
+        <foreach collection="roleIds"  index="index" item="i" open="(" separator="," close=")">
+            #{i}
+        </foreach>
+        )
+        order by sort asc
+    </select>
+
+</mapper>

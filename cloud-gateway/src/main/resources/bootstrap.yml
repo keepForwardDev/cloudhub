@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    nacos:
+      config:
+        server-addr: ${nacos.server-addr}
+        file-extension: yaml
+      discovery:
+        server-addr: ${nacos.server-addr}
+server:
+  port: 8082
+#  servlet:
+#    context-path: /sys
+#    session:
+#      cookie:
+#        name: sysSESSION
+nacos:
+  server-addr: localhost:8848
